@@ -12,7 +12,8 @@
 
 #define STRIPS 30
 #define HEIGHT 20
-#define STRIPSPEED 5
+#define STRIPSPEED 0.5
+#define ROTSPEED 1.5
 
 class Luxaflex
 {
@@ -32,6 +33,7 @@ public:
     float y[STRIPS];
     float rot; //rotation over x axis
     int lastStrip = STRIPS - 1; //var to make code more legible
+    bool sendDMX;
     
 };
 

@@ -15,6 +15,7 @@ Luxaflex::Luxaflex(int x_)
     x=x_;
     w = (ofGetWidth() * 0.75) / LUXAS;
     y[lastStrip] = STRIPS;
+    rot=10;
 }
 
 void Luxaflex::update(int direction)
@@ -23,14 +24,21 @@ void Luxaflex::update(int direction)
     for(int i = STRIPS -2; i > 0; i--)
         y[i]= fminf(i*HEIGHT, y[i+1]-1);
     
+    int mult;
+    if(sendDMX)
+        mult = 1;
+    else
+        mult = 10.0;
     //move last strip 
     switch (direction)
     {
         case -1:
-            y[lastStrip]-=1.0 * STRIPSPEED;
+            y[lastStrip]-=1.0 * STRIPSPEED * mult;
+            rot+=1.0 * ROTSPEED * mult;
             break;
         case 1:
-            y[lastStrip]+=1.0 * STRIPSPEED;
+            y[lastStrip]+=1.0 * STRIPSPEED * mult;
+            rot-=1.0 * ROTSPEED * mult;
             break;
         default:
             break;            
@@ -38,14 +46,18 @@ void Luxaflex::update(int direction)
     
     //limit y of last strip to min and max value
     y[lastStrip]=constrain(y[lastStrip], STRIPS, lastStrip * HEIGHT);
+    rot=constrain(rot,10,170);
 }
 
 void Luxaflex::draw()
 {
     for(int i =0; i < lastStrip; i++)
     {
-        ofRect(x,y[i],w,1);
-        //TODO this needs pretty rotate function
+        ofPushMatrix();
+        ofTranslate(x,y[i]);
+        ofRotate(rot,1.0,0.0,0.0);
+        ofRect(0,0,w,HEIGHT*0.9);
+        ofPopMatrix();
     }
 }
 

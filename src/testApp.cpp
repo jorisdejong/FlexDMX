@@ -4,10 +4,10 @@
  done - Port Queue to oF
  done - Create objects for data containment
  done - Port VirtuaFlex to oF
- - make pretty rotation function for flex object
- done Implement chase selection method, probably use presets
+ done-  make pretty rotation function for flex object
+ done - Implement chase selection method, probably use presets
  - Implement preset save and recall
- - Implement burst methods
+ - Implement burst methods to reset to real world
  - Implement individual control
  
  - Implement midi protocol
@@ -24,6 +24,7 @@
 void testApp::setup(){
     ofSetFrameRate(25);
     ofEnableSmoothing();
+
     
     //init flex objects
     for(int i = 0; i < LUXAS; i++)
@@ -32,6 +33,8 @@ void testApp::setup(){
     //delay value per flex
     delay = 0.2;
     newDelay = delay;
+    
+    sendDMX = true;
 }
 
 //--------------------------------------------------------------
@@ -47,8 +50,6 @@ void testApp::update(){
         addToQueue(0);
     
     //check if the queue is empty or not so we can safely update the delay
-
-    //maybe I should just handle this with a master switch on/off?
     if(newDelay != delay && isQueueEmpty())
     {
             delay=newDelay;
@@ -72,6 +73,8 @@ void testApp::update(){
     //feed it to flex objects
     for(int i = 0; i < LUXAS; i++)
     {
+        flex[i].sendDMX = sendDMX;
+        
         int v = (MAXMEMORY/LUXAS-1) * (chase[i]-1) * delay;
         flex[i].update(valueAtTime[1][v]);
     }
@@ -80,8 +83,10 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+
     ofBackground(32);
     ofSetColor(255);
+
     
     //draw temp help guides
     ofLine(0,ofGetHeight()/3,ofGetWidth(),ofGetHeight()/3);
@@ -101,17 +106,19 @@ void testApp::draw(){
         ofSetColor(255,0,0);
         ofRect(ofGetWidth()-20,ofGetHeight()-20,10,10);
     }
+
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
+    cout<<key<<endl;
     switch (key)
     {
         case 49:
             setChase(1, 2, 3, 4, 5);
             break;
         case 50:
-            setChase(2, 1, 2, 0, 0);
+            setChase(3, 2, 1, 2, 3);
             break;
         case 51:
             setChase(5, 4, 3, 2, 1);
@@ -119,6 +126,11 @@ void testApp::keyPressed(int key){
         case 52:
             setChase(1, 1, 1, 1, 1);
             break;
+        case 32:
+            if(isQueueEmpty())
+                sendDMX=!sendDMX;
+            break;
+            
     }
 
 }
