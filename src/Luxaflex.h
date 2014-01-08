@@ -6,6 +6,8 @@
 //
 //
 
+
+
 #ifndef FlexDMX_Luxaflex_h
 #define FlexDMX_Luxaflex_h
 
@@ -34,6 +36,10 @@ public:
     float rot; //rotation over x axis
     int lastStrip = STRIPS - 1; //var to make code more legible
     bool sendDMX;
+    bool move;
+    int upDown;
+    
+
     
 };
 

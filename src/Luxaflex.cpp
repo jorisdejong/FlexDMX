@@ -16,6 +16,9 @@ Luxaflex::Luxaflex(int x_)
     w = (ofGetWidth() * 0.75) / LUXAS;
     y[lastStrip] = STRIPS;
     rot=10;
+
+    
+
 }
 
 void Luxaflex::update(int direction)
@@ -35,12 +38,17 @@ void Luxaflex::update(int direction)
         case -1:
             y[lastStrip]-=1.0 * STRIPSPEED * mult;
             rot+=1.0 * ROTSPEED * mult;
+            move = true;
+            upDown = -1;
             break;
         case 1:
             y[lastStrip]+=1.0 * STRIPSPEED * mult;
             rot-=1.0 * ROTSPEED * mult;
+            move = true;
+            upDown = 1;
             break;
         default:
+            move = false;
             break;            
     }
     

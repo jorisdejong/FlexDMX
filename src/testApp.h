@@ -2,9 +2,11 @@
 
 #include "ofMain.h"
 #include "Luxaflex.h"
+#include "ofxUI.h"
+#include "ofxDmx.h"
 
 
-#define MAXMEMORY 250 //25 frames per second, means 10 frames total
+#define MAXMEMORY 250 //25 frames per second, means 10 seconds total
 #define LUXAS 5 //value between 0 and 5
 
 class testApp : public ofBaseApp{
@@ -27,6 +29,7 @@ class testApp : public ofBaseApp{
     void addToQueue(float v);
     float valueAtTime[2][MAXMEMORY];
     float delay;
+    float control;
     float newDelay;
     bool isQueueEmpty();
     bool sendDMX;
@@ -39,4 +42,14 @@ class testApp : public ofBaseApp{
     
 
     //gui shiznizzz
+    ofxUICanvas *gui;
+    void exit();
+    void guiEvent(ofxUIEventArgs &e);
+    
+    //DMX
+    ofxDmx dmx;
+    string deviceName;
+    ofSerial deviceList;
+    bool connectedToEnttec;
+    void sendDmxValue(int v, int channel);
 };
