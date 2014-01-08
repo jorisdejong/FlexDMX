@@ -48,9 +48,12 @@ void testApp::setup(){
     ofxUIRadio *radio = gui->addRadio("Chase", names, OFX_UI_ORIENTATION_VERTICAL, 17, 17);
     radio->activateToggle("1, 2, 3, 4, 5");
     
+    gui->addLabel("IPHONE STEKKER NIET VERGETEN", OFX_UI_FONT_LARGE);
+    
     gui->autoSizeToFitWidgets();
     ofAddListener(gui->newGUIEvent, this, &testApp::guiEvent);
     //gui->loadSettings("GUI/guiSettings.xml");
+    
     
 
     
@@ -64,6 +67,7 @@ void testApp::setup(){
     control = 0.5;
     
     sendDMX = true;
+    willSendDMX = sendDMX;
     
     //Enntec setup
     //get the serial device list
@@ -115,6 +119,12 @@ void testApp::update(){
         for(int i = 0; i < LUXAS; i++)
             chase[i]=newChase[i];
         isChaseDifferent=false;
+    }
+    
+    //check if the queue or not so we can safely update the SEND DMX;
+    if(willSendDMX!=sendDMX && isQueueEmpty())
+    {
+        sendDMX=willSendDMX;
     }
     
     //get the value from the queue
@@ -196,7 +206,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
     if(name == "Send DMX")
     {
         ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
-        sendDMX = toggle->getValue();
+        willSendDMX = toggle->getValue();
         
     }
     
